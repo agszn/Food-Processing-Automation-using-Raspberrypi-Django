@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  .container {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+</style>
+{% endblock %}
+{% load static %}
+{% block index %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- <h1 class="center-align">Earthquake Prediction in India</h1> -->
+    <!-- <canvas id="earthquakeChart"></canvas> -->
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const earthquakeChartCanvas = document.getElementById('earthquakeChart').getContext('2d');
+
+    // Sample data for earthquake prediction in Indian regions
+    const earthquakePredictionData = {
+        labels: ['Delhi', 'Mumbai', 'Kolkata', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai'],
+        datasets: [{
+            label: 'Predicted Earthquakes (in %)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            data: [15, 12, 8, 7, 6, 5, 10] // Sample earthquake predictions for each city in India
+        }]
+    };
+
+    // Options for earthquake prediction chart
+    const options = {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+
+    // Initialize earthquake prediction chart
+    const earthquakeChart = new Chart(earthquakeChartCanvas, {
+        type: 'line', // Change chart type to line
+        data: earthquakePredictionData,
+        options: options
+    });
+});
+</script>
+{% endblock %}
+

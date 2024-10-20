@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block index %}
+{% endblock %}
+
+{% block style %}
+<!-- Materialize CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .modal {
+        max-width: 80%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+    <h1>Dashboard</h1>
+    Hello, {{ request.user.username }}
+    <p>Welcome to your Page</p>
+</div>
+<!-- start -->
+<div class="container mt-5 p-5 rounded shadow bg-white">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="mb-3 alert alert-success text-center">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="d-flex mb-3 justify-content-between align-items-center">
+        <div class="">
+            <form method="post" class="d-flex">
+                {% csrf_token %}
+                <input type="search" name="query" class="form-control" placeholder="search..." value="{{search_query}}">
+                <button class="btn btn-success btn-sm px-3 mx-2" name="search">Search</button>
+            </form>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Food Name</th>
+                <th scope="col">Photo</th>
+                <th scope="col">Tempeature</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consumer in consumers %}
+            <tr>
+                <th>{{consumer.id}}</th>
+                <td>{{consumer.name}}</td>
+                <td>
+                    {% if consumer.image %}
+                    <img src="{{ MEDIA_URL }}{{ consumer.image.url }}" alt="{{ consumer.name }} Image" style="max-width: 50px; max-height: 50px;">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>
+                    {{ consumer.content|truncatewords_html:30 }}
+                    <!-- {% if consumer.content|length > 30 %}
+                    <a href="#" data-target="fullContentModal_{{ consumer.id }}" class="modal-trigger">Read More</a>
+                    {% endif %} -->
+                </td>
+                <td>
+                    {% if consumer.name == "Rice" %}
+                        <a href="{% url 'serial_data_view_rice' %}" class="modal-trigger btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i>Activate Rice</a>
+                    {% elif consumer.name == "Wheat" %}
+                        <a href="{% url 'serial_data_view_wheat' %}" class="modal-trigger btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i>Activate Wheat</a>
+                    {% else %}
+                        <a href="/" class="modal-trigger btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i>Activate</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+    <ul>
+    {% for data in received_data %}
+        <li>{{ data }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+<!-- Materialize JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modals = document.querySelectorAll('.modal');
+        M.Modal.init(modals);
+
+        var dropdowns = document.querySelectorAll('.dropdown-trigger');
+        M.Dropdown.init(dropdowns, { coverTrigger: false });
+    });
+</script>
+{% endblock %}
